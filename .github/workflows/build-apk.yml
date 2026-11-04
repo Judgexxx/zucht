@@ -1,0 +1,46 @@
+name: APK bauen
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Android-Projekt erzeugen
+        run: flutter create --platforms=android --org de.vogelzucht --project-name vogelzucht_app .
+
+      - name: Internet-Berechtigung eintragen
+        run: |
+          python3 - <<'PY'
+          p = 'android/app/src/main/AndroidManifest.xml'
+          s = open(p, encoding='utf-8').read()
+          perm = '<uses-permission android:name="android.permission.INTERNET"/>'
+          if perm not in s:
+              s = s.replace('<application', perm + '\n    <application', 1)
+          open(p, 'w', encoding='utf-8').write(s)
+          PY
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vogelzucht-apk
+          path: build/app/outputs/flutter-apk/app-release.apk

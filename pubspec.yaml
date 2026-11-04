@@ -1,0 +1,26 @@
+name: vogelzucht_app
+description: Android-App für das Ilch-Modul Vogelzucht (Wellensittiche, Zebrafinken, Gouldamadinen).
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.0
+  provider: ^6.1.2
+  shared_preferences: ^2.2.3
+  path_provider: ^2.1.3
+  connectivity_plus: ^6.0.3
+  image_picker: ^1.1.2
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
